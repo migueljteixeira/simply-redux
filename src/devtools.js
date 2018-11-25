@@ -13,7 +13,7 @@ function createPanelIfExtensionIsAvailable () {
 
       clearInterval(checkInterval);
 
-      chrome.devtools.panels.create("DemoPanel", null, "panel.html");
+      chrome.devtools.panels.create("SimplyRedux", null, "panel.html");
     }
   )
 }

@@ -3,19 +3,19 @@ const installHook = (target) => Object.defineProperty(target, '__SIMPLY_REDUX__'
     return ({ dispatch, getState } = {}) => {
       return ({ getState }) => next => (action) => {
 
-        const logEntry = {};
-        logEntry.started = new Date();
-        logEntry.prevState = getState();
-        logEntry.action = action;
+        const entry = {};
+        // entry.started = new Date();
+        entry.previousState = getState();
+        entry.action = action;
 
         const returnedValue = next(action);
 
-        //logEntry.took = timer.now() - logEntry.started;
-        logEntry.nextState = getState();
+        // entry.took = timer.now() - entry.started;
+        entry.nextState = getState();
 
         window.postMessage({
           source: 'simply-redux',
-          payload: logEntry
+          action: entry
         }, '*')
 
         return returnedValue;

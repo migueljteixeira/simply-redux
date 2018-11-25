@@ -1,23 +1,67 @@
-{#each actions as item}
-  <div>{item.payload.action.type}</div>
-{/each}
+<div class="panel { getTheme() }">
 
-<style>
-  * {
-    color: white;
-  }
-</style>
+  <div class="actions">
+    {#each actions as action, index}
+      <div on:click="set({ actionSelected: index })">
+        {action.action.type}
+      </div>
+    {/each}
+  </div>
+
+
+  {#if actionSelected !== null}
+    <div class="payload">
+      <h1>Payload</h1>
+      {prettify(actions[actionSelected].action)}
+      
+      <hr>
+
+      <h1>Previous State</h1>
+      {prettify(actions[actionSelected].previousState)}
+
+      <hr>
+
+      <h1>Next State</h1>
+      {prettify(actions[actionSelected].nextState)}
+    </div>
+  {/if}
+
+</div>
 
 <script>
   export default {
     data() {
       return {
-        actions: []
+        actions: [],
+        actionSelected: null
       };
     },
-    oncreate() {
-      const { actions } = this.get();
 
+    helpers: {
+      getTheme() {
+        return chrome.devtools.panels.themeName;
+      },
+
+      prettify(expression) {
+        return JSON.stringify(expression, null, '\t');
+      }      
+    },
+
+    methods: {
+      listener({ action }, sender, sendResponse) {
+        const { actions } = this.get();
+
+        if (actions.length === 50) {
+          actions.splice(0, 1);
+        }
+
+        actions.push(action);
+
+        this.set({ actions });
+      }
+    },
+
+    oncreate() {
       var connection = chrome.runtime.connect({
         name: 'panel'
       });
@@ -27,12 +71,30 @@
         tabId: chrome.devtools.inspectedWindow.tabId
       });
 
-      connection.onMessage.addListener((message, sender, sendResponse) => {
-        console.log('panel', message);
-        actions.push(message);
-
-        this.set({ actions });
-      });
+      connection.onMessage.addListener(this.listener.bind(this));
     }
   }
 </script>
+
+<style>
+  .panel {
+    display: flex;
+    height: 100%;
+
+    color: black;
+  }
+
+  .panel.dark {
+    color: white;
+  }
+
+  .actions,
+  .payload {
+    flex: 1;
+    overflow: auto;
+  }
+
+  .payload {
+    white-space: pre-wrap;
+  }
+</style>

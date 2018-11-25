@@ -25,7 +25,6 @@ chrome.runtime.onConnect.addListener(connection => {
     }
 
     if (connections[tabId][recipient]) {
-      debugger;
       connections[tabId][recipient].postMessage(message);
     }
   }

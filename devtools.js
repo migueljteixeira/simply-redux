@@ -13,7 +13,7 @@ function createPanelIfExtensionIsAvailable () {
 
       clearInterval(checkInterval);
 
-      chrome.devtools.panels.create("DemoPanel", "toast.png", "panel.html", function(panel) {});
+      chrome.devtools.panels.create("DemoPanel", null, "panel.html");
     }
   )
 }

@@ -19,7 +19,7 @@
           "<all_urls>"
         ],
         "js": [
-          "injected-script.js"
+          "hook.js"
         ],
         "run_at": "document_start"
       },
@@ -28,7 +28,7 @@
           "<all_urls>"
         ],
         "js": [
-          "content-script.js"
+          "proxy.js"
         ],
         "run_at": "document_idle"
       }

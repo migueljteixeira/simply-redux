@@ -1,0 +1,38 @@
+{#each actions as item}
+  <div>{item.payload.action.type}</div>
+{/each}
+
+<style>
+  * {
+    color: white;
+  }
+</style>
+
+<script>
+  export default {
+    data() {
+      return {
+        actions: []
+      };
+    },
+    oncreate() {
+      const { actions } = this.get();
+
+      var connection = chrome.runtime.connect({
+        name: 'panel'
+      });
+
+      connection.postMessage({
+        name: 'init',
+        tabId: chrome.devtools.inspectedWindow.tabId
+      });
+
+      connection.onMessage.addListener((message, sender, sendResponse) => {
+        console.log('panel', message);
+        actions.push(message);
+
+        this.set({ actions });
+      });
+    }
+  }
+</script>

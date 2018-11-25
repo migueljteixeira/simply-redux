@@ -1,0 +1,40 @@
+{
+    "name": "SimplyRedux",
+    "version": "0.1",
+    "manifest_version": 2,
+    "description": "Redux devtools simplified",
+    "web_accessible_resources": [
+      "devtools.html"
+    ],
+    "devtools_page": "devtools.html",
+    "background": {
+      "scripts": [
+        "background.js"
+      ],
+      "persistent": false
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "<all_urls>"
+        ],
+        "js": [
+          "injected-script.js"
+        ],
+        "run_at": "document_start"
+      },
+      {
+        "matches": [
+          "<all_urls>"
+        ],
+        "js": [
+          "content-script.js"
+        ],
+        "run_at": "document_idle"
+      }
+    ],
+    "permissions": [
+        "http://*/*",
+        "https://*/*"
+    ]
+}
